@@ -1,4 +1,5 @@
 ###The variables must be set using the Bash syntax, VARIABLE=VALUE.
+
 hostName=localhost
 
 zookeeperPort=2181
