@@ -1,0 +1,14 @@
+###The variables must be set using the Bash syntax, VARIABLE=VALUE.
+hostName=localhost
+
+zookeeperPort=2181
+zookeeperStart="/kafka_2.13-3.2.1/bin/zookeeper-server-start.sh"
+zookeeperStop="/kafka_2.13-3.2.1/bin/zookeeper-server-stop.sh"
+zookeeperProperties="/kafka_2.13-3.2.1/config/zookeeper.properties"
+zookeeperLogs="/kafka-basics/src/main/resources/logs/zk.out"
+
+kafkaPort=9092
+kafkaStart=/kafka_2.13-3.2.1/bin/kafka-server-start.sh
+kafkaStop=/kafka_2.13-3.2.1/bin/kafka-server-stop.sh
+kafkaProperties=/kafka_2.13-3.2.1/config/server.properties
+kafkaLogs='/kafka-basics/src/main/resources/logs/kafka.out'
