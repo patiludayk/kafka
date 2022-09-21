@@ -3,13 +3,13 @@
 hostName=localhost
 
 zookeeperPort=2181
-zookeeperStart="/kafka_2.13-3.2.1/bin/zookeeper-server-start.sh"
-zookeeperStop="/kafka_2.13-3.2.1/bin/zookeeper-server-stop.sh"
-zookeeperProperties="/kafka_2.13-3.2.1/config/zookeeper.properties"
-zookeeperLogs="/kafka-basics/src/main/resources/logs/zk.out"
+zookeeperStart="/Users/udaypatil/kafka_2.13-3.2.1/bin/zookeeper-server-start.sh"
+zookeeperStop="/Users/udaypatil/kafka_2.13-3.2.1/bin/zookeeper-server-stop.sh"
+zookeeperProperties="/Users/udaypatil/kafka_2.13-3.2.1/config/zookeeper.properties"
+zookeeperLogs="/Users/udaypatil/IdeaProjects/kafka/src/main/resources/logs/kafka.out"
 
 kafkaPort=9092
-kafkaStart=/kafka_2.13-3.2.1/bin/kafka-server-start.sh
-kafkaStop=/kafka_2.13-3.2.1/bin/kafka-server-stop.sh
-kafkaProperties=/kafka_2.13-3.2.1/config/server.properties
-kafkaLogs='/kafka-basics/src/main/resources/logs/kafka.out'
+kafkaStart=/Users/udaypatil/kafka_2.13-3.2.1/bin/kafka-server-start.sh
+kafkaStop=/Users/udaypatil/kafka_2.13-3.2.1/bin/kafka-server-stop.sh
+kafkaProperties=/Users/udaypatil/kafka_2.13-3.2.1/config/server.properties
+kafkaLogs='/Users/udaypatil/IdeaProjects/kafka/src/main/resources/logs/kafka.out'
