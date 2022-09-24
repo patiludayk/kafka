@@ -1,12 +1,14 @@
 package com.learning.kafka.config.consumer;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Properties;
+import java.util.UUID;
 
 @Component
 public class ConsumerConfiguration {
@@ -17,21 +19,22 @@ public class ConsumerConfiguration {
     @Value("${GROUP_ID:kafka-learning}")
     private String groupId;
 
-    public KafkaConsumer<String, String> createConsumer(String topic) {
-
+    public Properties getConsumerProperties() {
         // create consumer configs
         Properties properties = new Properties();
-        properties.setProperty(org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-        properties.setProperty(org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        properties.setProperty(org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); 	//[latest, earliest, none]
-        properties.setProperty(org.apache.kafka.clients.consumer.ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"); //false
+        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
+        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); 	//[latest, earliest, none]
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"); //false
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "500");
 
-        // create consumer
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
-        consumer.subscribe(Arrays.asList(topic));
-
-        return consumer;
+        return properties;
     }
+
+    public KafkaConsumer<String, String> getDefaultKafkaConsumer(){
+        return new KafkaConsumer<String, String>(getConsumerProperties());
+    }
+
 }
