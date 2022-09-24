@@ -1,7 +1,9 @@
 package com.learning.kafka.controller;
 
+import com.learning.kafka.dto.ConsumerResponse;
 import com.learning.kafka.dto.ProducerResponse;
 import com.learning.kafka.producer.SpringBootProducer;
+import com.learning.kafka.service.CustomKafkaConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,9 @@ public class ActionController {
     private final SpringBootProducer producer;
 
     @Autowired
+    private CustomKafkaConsumer<ConsumerResponse> customKafkaConsumer;
+
+    @Autowired
     public ActionController(SpringBootProducer producer) {
         this.producer = producer;
     }
@@ -38,9 +43,11 @@ public class ActionController {
         return responseList;
     }
 
-    @PostMapping(value = "/consume")
-    public ProducerResponse consumeMessageFromKafkaTopic(@RequestParam("event") String message) {
-        String key = UUID.randomUUID().toString();
-        return producer.sendMessage(key, message);
+    @GetMapping(value = "/consume")
+    public List<ConsumerResponse> consumeMessageFromKafkaTopic() {
+        List<ConsumerResponse> messages = new ArrayList<>();
+        customKafkaConsumer.consumeEvents(messages);
+
+        return messages;
     }
 }

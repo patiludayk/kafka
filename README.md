@@ -46,21 +46,21 @@ This is basic guide to start with springboot kafka learning.
   * build deployable artifact using jar/war option and deploy to server.
   * No special requirement except path to kafka directories.
 
-##How to Run/start 
+## How to Run/start 
 * Run as normal spring boot project from IDE.
 * If not using STS or any springboot supported plugin run as below maven goal for class _KafkaLearningProjectApplication.java_
   * spring-boot:run
   * from any API tool, hit API - /kafka/send with POST method to send event to kagfka broker
   * once received 200 successful response, connect kafka broker using Offset Explore to check your event at Kafka against topic name you provided.
 
-##REST API
+## REST API
 The REST API to the example app is described below.
 
-###1. Push message to kafka
+### 1. Push record to kafka
 #### Request
 `POST /kafka/produce`
 
-    curl -i -H 'Accept: application/json' http://localhost:8080/kafka/produce
+    curl --location --request POST 'localhost:8080/kafka/produce' --header 'Content-Type: application/json' --data-raw '["uday patil", "java developer"]'
 
 #### Response
 
@@ -72,39 +72,68 @@ The REST API to the example app is described below.
     Content-Length: 2
 
     [
-    {
-        "partition": 0,
-        "offset": 2,
-        "msg": "msg delivered.",
-        "exception": null
-    },
-    {
-        "partition": 0,
-        "offset": 3,
-        "msg": "msg delivered.",
-        "exception": null
-    }
+      {
+          "partition": 0,
+          "offset": 2,
+          "msg": "msg delivered.",
+          "exception": null
+      },
+      {
+          "partition": 0,
+          "offset": 3,
+          "msg": "msg delivered.",
+          "exception": null
+      }
     ]
 
-### 2. new endpoint.. - coming soon...
+### 2. Consume records from kafka
 
 #### Request
 
-`POST /thing/`
+`GET /kafka/consume`
 
-    curl -i -H 'Accept: application/json' -d 'name=Foo&status=new' http://localhost:8080/thing
+    curl --location --request GET 'localhost:8080/kafka/consume' --header 'Content-Type: application/json'
 
 #### Response
 
-    HTTP/1.1 201 Created
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
-    Status: 201 Created
+    HTTP/1.1 200 OK
+    Date: Sat, 24 Sep 2022 16:33:33 GMT
+    Status: 200 OK
     Connection: close
     Content-Type: application/json
-    Location: /thing/1
+    Location: /kafka/consume
     Content-Length: 36
 
-    {"id":1,"name":"Foo","status":"new"}
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "key": "54dadaf5-415e-4659-80e4-d9b57a2ea99c",
+          "value": "uday patil",
+          "exception": null
+      },
+      {
+          "partition": 0,
+          "offset": 1,
+          "key": "17a6fd5c-c101-494f-8a8a-3435c2d1867f",
+          "value": "java developer",
+          "exception": null
+      },
+      {
+          "partition": 0,
+          "offset": 2,
+          "key": "d4976a14-708e-41ad-80b5-de81f15c2429",
+          "value": "uday patil",
+          "exception": null
+      },
+      {
+          "partition": 0,
+          "offset": 3,
+          "key": "f4dbd8bd-5f42-4aef-b6bc-93c114655641",
+          "value": "java developer",
+          "exception": null
+      }
+    ]
 
 
 ### Contribution guidelines ###
