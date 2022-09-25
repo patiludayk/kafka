@@ -1,0 +1,6 @@
+# Find process locking port
+$ netstat -vanp tcp | grep $portNumber
+$ lsof -i tcp:$portNumber
+
+#Kill process
+$ kill -9 <PID>

@@ -32,7 +32,7 @@ public class CustomConsumerImpl implements CustomKafkaConsumer {
     }
 
     @Override
-    public void consumeEvents(List messages) {
+    public void consumeEvents(String topicName, List messages) {
 
         Properties consumerProperties = consumerConfiguration.getConsumerProperties();
         consumerProperties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());

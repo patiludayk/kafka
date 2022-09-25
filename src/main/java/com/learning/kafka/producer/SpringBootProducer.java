@@ -30,9 +30,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SpringBootProducer {
 
-    @Value("${TOPIC_NAME}")
-    private String TOPIC;
-
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
@@ -53,9 +50,9 @@ public class SpringBootProducer {
      * @param message
      * @return ProducerResponse
      */
-    public ProducerResponse sendMessage(String key, String message) {
+    public ProducerResponse sendMessage(String topicName, String key, String message) {
         log.info("#### -> Producing message -> {}", message);
-        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC, key, message);
+        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topicName, key, message);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
@@ -89,7 +86,6 @@ public class SpringBootProducer {
 
     /**
      * send record to kafka broker using producer one which uses producerfactoryone and kafkatemplate-producerOne
-     *
      * @param topicName
      * @param key
      * @param value

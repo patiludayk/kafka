@@ -59,10 +59,10 @@ Do check last line of this page.
 The REST API to the example app is described below.
 
 ### Producer API
-#### 1. Request - using default producer configuration
-`POST /kafka/produce/default`
+#### 1. Request - push record/s using default producer configuration, provide topic name in requestbody or else records will be pushed to default topic from application.properties file - TOPIC_NAME=topic-name 
+`POST /kafka/produce/default/{topicName}`
 
-    curl --location --request POST 'localhost:8080/kafka/produce/default' --header 'Content-Type: application/json' --data-raw '["uday patil", "java developer"]'
+    curl --location --request POST 'localhost:8080/kafka/produce/default' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1","message 2"]}'
 
 #### Response
 
@@ -120,11 +120,11 @@ The REST API to the example app is described below.
 
 ### Consumer API
 
-#### 1. Request - default consumer gets records from initial offset
+#### 1. Request - default consumer gets records from initial offset, provide topic name as path variable or else records will be consumed from default topic from application.properties file - TOPIC_NAME=topic-name
 
-`GET /kafka/consume/default`
+`GET /kafka/consume/default/{topicName}`
 
-    curl --location --request GET 'localhost:8080/kafka/consume/default' --header 'Content-Type: application/json'
+    curl --location --request GET 'localhost:8080/kafka/consume/default/{topicName}' --header 'Content-Type: application/json'
 
 #### Response
 
@@ -133,7 +133,7 @@ The REST API to the example app is described below.
     Status: 200 OK
     Connection: close
     Content-Type: application/json
-    Location: /kafka/consume
+    Location: /kafka/consume/default/{topicName}
     Content-Length: 36
 
     [

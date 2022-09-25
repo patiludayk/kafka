@@ -26,4 +26,16 @@ public class ProducerFacade {
         }
         return producerResponses;
     }
+
+    public List<ProducerResponse> sendMessageUsingProducerTwo(ProducerRequest request) {
+        List<ProducerResponse> producerResponses = new ArrayList<>();
+
+        String topicName = request.getTopicName();
+        String key = request.getKey();
+        for (String record : request.getRecords()) {
+            producerResponses.add(producer.sendMessageUsingProducerTwo(topicName, key, record));
+        }
+        return producerResponses;
+    }
+
 }
