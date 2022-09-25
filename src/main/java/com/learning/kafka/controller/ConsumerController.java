@@ -13,41 +13,26 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This <>ActionController</> class responsible for user actions like sending message to kafka via producer
- * and consuming using consumer.
+ * This <>ActionController</> class responsible for user actions like consuming records from kafka.
  */
 @RestController
 @Slf4j
-@RequestMapping("/kafka")
-public class ActionController {
+@RequestMapping("/kafka/consume")
+public class ConsumerController {
 
-    private final SpringBootProducer producer;
-
-    @Autowired
     private CustomKafkaConsumer<ConsumerResponse> customKafkaConsumer;
 
     @Autowired
-    public ActionController(SpringBootProducer producer) {
-        this.producer = producer;
+    public ConsumerController(CustomKafkaConsumer<ConsumerResponse> customKafkaConsumer) {
+        this.customKafkaConsumer = customKafkaConsumer;
     }
 
-    @PostMapping(value = "/produce")
-    public List<ProducerResponse> sendMessageToKafkaTopic(@RequestBody List<String> events) {
-
-        List<ProducerResponse> responseList = new ArrayList<>();
-        for (String event : events) {
-            String key = UUID.randomUUID().toString();
-            responseList.add(producer.sendMessage(key, event));
-        }
-
-        return responseList;
-    }
-
-    @GetMapping(value = "/consume")
+    @GetMapping(value = "/default")
     public List<ConsumerResponse> consumeMessageFromKafkaTopic() {
         List<ConsumerResponse> messages = new ArrayList<>();
         customKafkaConsumer.consumeEvents(messages);
 
         return messages;
     }
+
 }

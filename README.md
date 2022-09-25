@@ -1,6 +1,8 @@
 # README #
 
-This is basic guide to start with springboot kafka learning.
+This is basic guide to start with springboot kafka learning. 
+
+Do check last line of this page.
 
 ## What is this repository for? ###
 
@@ -56,11 +58,11 @@ This is basic guide to start with springboot kafka learning.
 ## REST API
 The REST API to the example app is described below.
 
-### 1. Push record to kafka
-#### Request
-`POST /kafka/produce`
+### Producer API
+#### 1. Request - using default producer configuration
+`POST /kafka/produce/default`
 
-    curl --location --request POST 'localhost:8080/kafka/produce' --header 'Content-Type: application/json' --data-raw '["uday patil", "java developer"]'
+    curl --location --request POST 'localhost:8080/kafka/produce/default' --header 'Content-Type: application/json' --data-raw '["uday patil", "java developer"]'
 
 #### Response
 
@@ -86,13 +88,43 @@ The REST API to the example app is described below.
       }
     ]
 
-### 2. Consume records from kafka
+#### 2. Request - using producerOne configuration, different producer within same context
+`POST /kafka/produce/producerOne` OR `POST /kafka/produce/producerOne1`
 
-#### Request
+    curl --location --request POST 'localhost:8080/kafka/produce/producerOne' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1","message 2"]}'
 
-`GET /kafka/consume`
+#### Response
 
-    curl --location --request GET 'localhost:8080/kafka/consume' --header 'Content-Type: application/json'
+    HTTP/1.1 200 OK
+    Date: Sun, 25 Sep 2022 01:39:17 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "msg": "msg delivered.",
+          "error": null
+      },
+      {
+          "partition": 0,
+          "offset": 1,
+          "msg": "msg delivered.",
+          "error": null
+      }
+    ]
+
+
+### Consumer API
+
+#### 1. Request - default consumer gets records from initial offset
+
+`GET /kafka/consume/default`
+
+    curl --location --request GET 'localhost:8080/kafka/consume/default' --header 'Content-Type: application/json'
 
 #### Response
 
@@ -152,3 +184,6 @@ The REST API to the example app is described below.
 ### Misc
 * How to connect to zk server
   * _sh zookeeper-shell.sh localhost:2181_ [more detail](https://zookeeper.apache.org/doc/r3.3.3/zookeeperStarted.html)
+
+# Special requirement with Kafka/Kafka Stream implementation
+  #### message me at - [LinkedIn](https://www.linkedin.com/in/patiludayk/)
