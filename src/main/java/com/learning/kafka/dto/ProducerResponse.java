@@ -9,5 +9,5 @@ public class ProducerResponse {
     private int partition;
     private long offset;
     private String msg;
-    private String exception;
+    private Throwable error;
 }

@@ -23,10 +23,13 @@ public class CustomConsumerImpl implements CustomKafkaConsumer {
     @Value("${TOPIC_NAME:my-topic}")
     private String topicName;
 
-    @Autowired
     private ConsumerConfiguration consumerConfiguration;
-
     private KafkaConsumer<String, String> kafkaConsumer;
+
+    @Autowired
+    public CustomConsumerImpl(ConsumerConfiguration consumerConfiguration) {
+        this.consumerConfiguration = consumerConfiguration;
+    }
 
     @Override
     public void consumeEvents(List messages) {
