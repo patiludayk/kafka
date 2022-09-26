@@ -3,20 +3,18 @@ package com.learning.kafka.controller;
 import com.learning.kafka.dto.ProducerRequest;
 import com.learning.kafka.dto.ProducerResponse;
 import com.learning.kafka.facade.CustomProducerFacade;
-import com.learning.kafka.producer.CustomProducerImpl;
+import com.learning.kafka.producer.DefaultProducerImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This <>ActionController</> class responsible for user actions like sending message to kafka via producer
@@ -24,36 +22,36 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @RequestMapping("/kafka/produce")
-public class ProducerController<T> {
+public class DefaultProducerController<K, V> {
 
 
     @Value("${TOPIC_NAME}")
     private String TOPIC;
 
-    private CustomProducerImpl producer;
-    private CustomProducerFacade customProducerFacade;
+    @Autowired
+    private DefaultProducerImpl<K, V> producer;
 
     @Autowired
-    public ProducerController(CustomProducerImpl producer) {
-        this.producer = producer;
-    }
+    private CustomProducerFacade customProducerFacade;
 
-    @PostMapping(value = "/default/")
+    @PostMapping(value = "/default")
     public List<ProducerResponse> sendRecordToKafkaDefault(@RequestBody ProducerRequest request) {
 
-        List<ProducerResponse> responseList = new ArrayList<>();
         String topic = request.getTopicName() != null && !request.getTopicName().isEmpty() ? request.getTopicName() : TOPIC;
-        for (String record : request.getRecords()) {
-            String key = UUID.randomUUID().toString();
-            responseList.add(producer.sendMessage(topic, key, record));
-        }
+        K key = (K) request.getKey();
 
-        return responseList;
+        final Stream<?> recordStream = request.getRecords().stream();
+        final List<ProducerResponse> producerResponses = recordStream
+                .map(record -> producer.produce(topic, key, (V) record))
+                .collect(Collectors.toList());
+
+        return producerResponses;
     }
+/*
 
     @PostMapping(value = "/producerOne")
     public List<ProducerResponse> sendRecordsToKafkaViaProducerOne(@RequestBody ProducerRequest request) {
-        return producer.sendMessageUsingProducerOne(request);
+        return producer.sendMessageUsingProducerRequest(request);
     }
 
     @PostMapping(value = "/producerOne1")
@@ -71,7 +69,7 @@ public class ProducerController<T> {
         if (request.getRecords().size() > 1) {
             return new ResponseEntity<>("too many records, kindly use /kafka/produce/producerTwo", HttpStatus.PAYLOAD_TOO_LARGE);
         }
-        return (ResponseEntity) customProducerFacade.sendMessageUsingProducerTwo(request);
+        return new ResponseEntity<>(customProducerFacade.sendMessageUsingProducerTwo(request), HttpStatus.OK);
     }
-
+*/
 }

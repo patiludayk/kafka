@@ -1,4 +1,10 @@
-1. add CustomProducerImpl for each producer by implementing CustomKafkaProducer
+1. add CustomProducerImpl for each producer by implementing CustomKafkaProducer >> done 6.2, 6.3
 2. add custom producer, kafkatemplate for custom object - ProducerFactory<String, UserDefinedObject> -> KafkaTemplate<String, UserDefinedObject>
 3. above step will complete adding 2 type of serializer example String and Json.
 4. Add 1 more with different type of serialization and deserialization preferably something different!
+5. make all producers generic >> done 7.
+
+#start consumer side - too many possible scenario to cover, start asap!!!
+
+
+# add swagger ui
