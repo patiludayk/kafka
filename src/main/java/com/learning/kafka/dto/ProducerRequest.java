@@ -5,8 +5,8 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class ProducerRequest {
+public class ProducerRequest<K, V> {
     private String topicName;
-    private String key;
-    private List<String> records;
+    private K key;
+    private List<V> records;
 }

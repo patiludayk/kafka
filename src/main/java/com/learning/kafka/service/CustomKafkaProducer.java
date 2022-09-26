@@ -1,10 +1,15 @@
 package com.learning.kafka.service;
 
+import com.learning.kafka.dto.ProducerRequest;
 import com.learning.kafka.dto.ProducerResponse;
 import org.springframework.stereotype.Service;
 
-@Service
-public interface CustomKafkaProducer<T> {
+import java.util.List;
 
-    ProducerResponse produce(String topic, String key, T value);
+@Service
+public interface CustomKafkaProducer<K, V> {
+
+    ProducerResponse produce(String topic, K key, V value);
+
+    List<ProducerResponse> sendMessageUsingProducerRequest(ProducerRequest request);
 }

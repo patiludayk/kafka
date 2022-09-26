@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.*;
 
@@ -58,10 +57,6 @@ public class CustomConsumerImpl implements CustomKafkaConsumer {
         }
         log.info("Done reading from kafka topic. Closing kafka consumer.");
         kafkaConsumer.close();
-    }
-
-    @PostConstruct
-    public void shutdown() {
     }
 
 }

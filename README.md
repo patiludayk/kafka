@@ -59,8 +59,8 @@ Do check last line of this page.
 The REST API to the example app is described below.
 
 ### Producer API
-#### 1. Request - push record/s using default producer configuration, provide topic name in requestbody or else records will be pushed to default topic from application.properties file - TOPIC_NAME=topic-name 
-`POST /kafka/produce/default/{topicName}`
+#### 1. default send - push record/s using default producer configuration, provide topic name in requestbody or else records will be pushed to default topic from application.properties file - TOPIC_NAME=topic-name 
+`POST /kafka/produce/default/`
 
     curl --location --request POST 'localhost:8080/kafka/produce/default' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1","message 2"]}'
 
@@ -88,10 +88,10 @@ The REST API to the example app is described below.
       }
     ]
 
-#### 2. Request - using producerOne configuration, different producer within same context
-`POST /kafka/produce/producerOne` OR `POST /kafka/produce/producerOne1`
+#### 2. bulk send - using producerOne configuration, for bulk records to send to kafka (records must be > 1)
+`POST /kafka/produce/producerOne/bulk`
 
-    curl --location --request POST 'localhost:8080/kafka/produce/producerOne' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1","message 2"]}'
+    curl --location --request POST 'localhost:8080/kafka/produce/producerOne/bulk' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1","message 2"]}'
 
 #### Response
 
@@ -117,6 +117,137 @@ The REST API to the example app is described below.
       }
     ]
 
+#### 3. single send - using producerTwo configuration, for single record to send to kafka (record must be exactly 1)
+`POST /kafka/produce/producerTwo/single`
+
+    curl --location --request POST 'localhost:8080/kafka/produce/producerTwo/single' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1"]}'
+
+#### Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, 25 Sep 2022 01:39:17 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "msg": "msg delivered.",
+          "error": null
+      }
+    ]
+
+#### 4. single/bulk process - using producerTwo configuration, for record/s to send to kafka (at least 1 record) allowing some processing before sending to kafka
+`POST /kafka/produce/producerTwo/process`
+
+    curl --location --request POST 'localhost:8080/kafka/produce/producerTwo/process' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1"]}'
+
+#### Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, 25 Sep 2022 01:39:17 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "msg": "msg delivered.",
+          "error": null
+      },
+      {
+          "partition": 0,
+          "offset": 1,
+          "msg": "msg delivered.",
+          "error": null
+      }
+    ]
+#### 5. bulk send - using producerTwo configuration, for bulk records to send to kafka (records must be > 1)
+`POST /kafka/produce/producerOne/bulk`
+
+    curl --location --request POST 'localhost:8080/kafka/produce/producerTwo/bulk' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1","message 2"]}'
+
+#### Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, 25 Sep 2022 01:39:17 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "msg": "msg delivered.",
+          "error": null
+      },
+      {
+          "partition": 0,
+          "offset": 1,
+          "msg": "msg delivered.",
+          "error": null
+      }
+    ]
+
+#### 6. single send - using producerTwo configuration, for single record to send to kafka (record must be exactly 1)
+`POST /kafka/produce/producerTwo/single`
+
+    curl --location --request POST 'localhost:8080/kafka/produce/producerTwo/single' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1"]}'
+
+#### Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, 25 Sep 2022 01:39:17 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "msg": "msg delivered.",
+          "error": null
+      }
+    ]
+
+#### 7. single/bulk process - using producerOne configuration, for record/s to send to kafka (at least 1 record) allowing some processing before sending to kafka
+`POST /kafka/produce/producerTwo/process`
+
+    curl --location --request POST 'localhost:8080/kafka/produce/producerTwo/process' --header 'Content-Type: application/json' --data-raw '{"topicName": "topicName","key": "key","records": ["message 1"]}'
+
+#### Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, 25 Sep 2022 01:39:17 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    [
+      {
+          "partition": 0,
+          "offset": 0,
+          "msg": "msg delivered.",
+          "error": null
+      },
+      {
+          "partition": 0,
+          "offset": 1,
+          "msg": "msg delivered.",
+          "error": null
+      }
+    ]
 
 ### Consumer API
 
