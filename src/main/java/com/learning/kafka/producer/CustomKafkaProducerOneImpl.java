@@ -3,7 +3,6 @@ package com.learning.kafka.producer;
 import com.learning.kafka.dto.ProducerRequest;
 import com.learning.kafka.dto.ProducerResponse;
 import com.learning.kafka.service.CustomKafkaProducer;
-import com.sun.istack.internal.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,7 +42,7 @@ public class CustomKafkaProducerOneImpl<K, V> implements CustomKafkaProducer<K, 
      * @return ProducerResponse
      */
     @Override
-    public ProducerResponse produce(@NotNull String topic, K key, V value) {
+    public ProducerResponse produce(String topic, K key, V value) {
 
         ListenableFuture<SendResult<K, V>> future = kafkaTemplateOne.send(topic, key, value);
         try {
