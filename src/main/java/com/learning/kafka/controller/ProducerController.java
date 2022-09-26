@@ -2,8 +2,8 @@ package com.learning.kafka.controller;
 
 import com.learning.kafka.dto.ProducerRequest;
 import com.learning.kafka.dto.ProducerResponse;
-import com.learning.kafka.facade.ProducerFacade;
-import com.learning.kafka.producer.SpringBootProducer;
+import com.learning.kafka.facade.CustomProducerFacade;
+import com.learning.kafka.producer.CustomProducerImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,11 +30,11 @@ public class ProducerController<T> {
     @Value("${TOPIC_NAME}")
     private String TOPIC;
 
-    private SpringBootProducer producer;
-    private ProducerFacade producerFacade;
+    private CustomProducerImpl producer;
+    private CustomProducerFacade customProducerFacade;
 
     @Autowired
-    public ProducerController(SpringBootProducer producer) {
+    public ProducerController(CustomProducerImpl producer) {
         this.producer = producer;
     }
 
@@ -58,12 +58,12 @@ public class ProducerController<T> {
 
     @PostMapping(value = "/producerOne1")
     public List<ProducerResponse> sendRecordsToKafkaViaProducerOne1(@RequestBody ProducerRequest request) {
-        return producerFacade.sendMessageUsingProducerOne(request);
+        return customProducerFacade.sendMessageUsingProducerOne(request);
     }
 
     @PostMapping(value = "/producerTwo")
     public List<ProducerResponse> sendRecordsToKafkaViaProducerTwo(@RequestBody ProducerRequest request) {
-        return producerFacade.sendMessageUsingProducerTwo(request);
+        return customProducerFacade.sendMessageUsingProducerTwo(request);
     }
 
     @PostMapping(value = "/producerTwo1")
@@ -71,7 +71,7 @@ public class ProducerController<T> {
         if (request.getRecords().size() > 1) {
             return new ResponseEntity<>("too many records, kindly use /kafka/produce/producerTwo", HttpStatus.PAYLOAD_TOO_LARGE);
         }
-        return (ResponseEntity) producerFacade.sendMessageUsingProducerTwo(request);
+        return (ResponseEntity) customProducerFacade.sendMessageUsingProducerTwo(request);
     }
 
 }

@@ -1,8 +1,6 @@
 package com.learning.kafka.controller;
 
 import com.learning.kafka.dto.ConsumerResponse;
-import com.learning.kafka.dto.ProducerResponse;
-import com.learning.kafka.producer.SpringBootProducer;
 import com.learning.kafka.service.CustomKafkaConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * This <>ActionController</> class responsible for user actions like consuming records from kafka.
@@ -37,7 +34,7 @@ public class ConsumerController {
         List<ConsumerResponse> messages = new ArrayList<>();
         String topic = topicName.isPresent() ? topicName.get() : TOPIC;
         log.info("consuming records from topic: {}", topic);
-        customKafkaConsumer.consumeEvents(topic, messages);
+        customKafkaConsumer.consumeRecords(topic, messages);
 
         return messages;
     }
