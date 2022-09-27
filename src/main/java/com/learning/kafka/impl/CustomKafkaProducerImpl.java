@@ -1,11 +1,11 @@
-package com.learning.kafka.producer;
+package com.learning.kafka.impl;
 
 import com.learning.kafka.dto.ProducerRequest;
 import com.learning.kafka.dto.ProducerResponse;
+import com.learning.kafka.helper.RecordMetadataHelper;
 import com.learning.kafka.service.CustomKafkaProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -18,36 +18,31 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * This <>SpringBootProducer</> class is easy to understand and removes all boilerplate code for
- * kafka producer configuration.
- * If you want to take controller and understand KafkaProducer properties more in detail please refer <>ProducerConfiguration</>
- */
 @Service
 @Slf4j
-public class CustomKafkaProducerOneImpl<K, V> implements CustomKafkaProducer<K, V> {
+public class CustomKafkaProducerImpl<K, V> implements CustomKafkaProducer<K, V> {
 
-    @Autowired
     private RecordMetadataHelper<K, V> recordMetadataHelper;
 
     @Autowired
-    @Qualifier("producerOne")
-    private KafkaTemplate<K, V> kafkaTemplateOne;
+    public CustomKafkaProducerImpl(RecordMetadataHelper recordMetadataHelper){
+        this.recordMetadataHelper = recordMetadataHelper;
+    }
 
     /**
-     * Send record to kafka broker using producer one which uses producerfactoryone and kafkatemplate-producerOne
+     * Send single record to kafka using kafka template provided.
+     * @param kafkaTemplate
      * @param topic
      * @param key
      * @param value
      * @return ProducerResponse
      */
     @Override
-    public ProducerResponse produce(String topic, K key, V value) {
-
-        ListenableFuture<SendResult<K, V>> future = kafkaTemplateOne.send(topic, key, value);
+    public ProducerResponse produce(KafkaTemplate<K, V> kafkaTemplate, String topic, K key, V value) {
+        ListenableFuture<SendResult<K, V>> future = kafkaTemplate.send(topic, key, value);
         try {
             //retry 3 times in case of timeout
-            return recordMetadataHelper.retryGetProducerRecordMetadata(future, 3);
+            return recordMetadataHelper.retryGetProducerRecordMetadataNew(future, 3);
         } catch (InterruptedException e) {
             log.error("execution interrupted.");
             return ProducerResponse.builder().msg("msg failed to deliver. due to interruption").error(e).build();
@@ -57,28 +52,30 @@ public class CustomKafkaProducerOneImpl<K, V> implements CustomKafkaProducer<K, 
         }
     }
 
+    /**
+     * Sends record/s in bulk using provided kafkatemplate - bulk means producer configuration provided in producer factory
+     * kafka producer properties used batch.size and linger.ms to manage this behaviour.
+     * @param kafkaTemplate KafkaTemplate<K, V>
+     * @param request ProducerRequest
+     * @return List<ProducerResponse>
+     */
     @Override
-    public List<ProducerResponse> sendMessageUsingProducerRequest(ProducerRequest request) {
-
+    public List<ProducerResponse> sendBulkMessageUsingProducerRequest(KafkaTemplate<K, V> kafkaTemplate, ProducerRequest request) {
         String topicName = request.getTopicName();
         Objects.requireNonNull(topicName, "Topic name cannot be null.");
 
         Stream<?> stream = request.getRecords().stream();
-        final List<ProducerResponse> producerResponses = stream.map(record -> kafkaTemplateOne.send(topicName, (K) request.getKey(), (V) record))
+        final List<ProducerResponse> producerResponses = stream.map(record -> kafkaTemplate.send(topicName, (K) request.getKey(), (V) record))
                 .map(listenableFutureProducerResponseFunction)
                 .collect(Collectors.toList());
 
-        /*return request.getRecords().stream()
-                .map(record -> kafkaTemplateOne.send(topicName, key, record))
-                .map(recordMetadataHelper::apply)
-                .collect(Collectors.toList());*/
         return producerResponses;
     }
 
     final Function<ListenableFuture<SendResult<K, V>>, ProducerResponse> listenableFutureProducerResponseFunction = future -> {
         try {
             //retry 3 times in case of timeout
-            return recordMetadataHelper.retryGetProducerRecordMetadata(future, 3);
+            return recordMetadataHelper.retryGetProducerRecordMetadataNew(future, 3);
 
         } catch (InterruptedException e) {
             log.error("execution interrupted.");
@@ -88,18 +85,4 @@ public class CustomKafkaProducerOneImpl<K, V> implements CustomKafkaProducer<K, 
             return ProducerResponse.builder().msg("msg failed to deliver.").error(e).build();
         }
     };
-
-    /*@Override
-    public List<ProducerResponse> sendMessageUsingProducerRequest(ProducerRequest request) {
-
-        String topicName = request.getTopicName();
-        String key = request.getKey();
-        Objects.requireNonNull(topicName, "Topic name cannot be null.");
-
-        return request.getRecords().stream()
-                .map(record -> kafkaTemplateOne.send(topicName, key, (String) record))
-                .map(recordMetadataHelper::apply)
-                .collect(Collectors.toList());
-    }*/
-
 }

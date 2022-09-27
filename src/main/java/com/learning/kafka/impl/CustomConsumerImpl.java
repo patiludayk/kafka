@@ -1,4 +1,4 @@
-package com.learning.kafka.ServiceImpl;
+package com.learning.kafka.impl;
 
 import com.learning.kafka.config.consumer.ConsumerConfiguration;
 import com.learning.kafka.dto.ConsumerResponse;
