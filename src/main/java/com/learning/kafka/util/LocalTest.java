@@ -16,9 +16,27 @@ public class LocalTest {
     public static void main(String[] args) {
         LocalTest localTest = new LocalTest();
 
-        localTest.executeShellCommand("/Users/udaypatil/test", "sh", "test.sh");
+        //localTest.executeShellCommand("/Users/udaypatil/test", "sh", "test.sh");
+
+        localTest.getMeProducerType("producer30");
 
         log.info("done.");
+    }
+
+    private void getMeProducerType(String producer1) {
+        switch (producer1){
+            case "producer1" :
+                log.info("producer1");
+                break;
+            case "producer2" :
+                log.info("producer2");
+                break;
+            case "producer3" :
+                log.info("producer3");
+                break;
+            default:
+                log.info("default");
+        }
     }
 
     @PreDestroy
