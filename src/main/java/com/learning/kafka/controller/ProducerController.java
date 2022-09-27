@@ -5,6 +5,7 @@ import com.learning.kafka.facade.CustomProducerFacade;
 import com.learning.kafka.util.ProducerType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ import java.util.List;
 @RequestMapping("/kafka/produce")
 public class ProducerController<K, V> {
 
+    @Value("${TOPIC_NAME}")
+    private String TOPIC;
+
     private CustomProducerFacade<K, V> customProducerFacade;
 
     @Autowired
@@ -25,29 +29,37 @@ public class ProducerController<K, V> {
 
     /**
      * sends single original record to kafka using producer
+     *
      * @param request ProducerRequest
      * @return ResponseEntity
      */
-    @PostMapping(value = "/{producer}/single")
+    @PostMapping(value = "{producer}/single")
     public ResponseEntity sendRecordToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
 
         ProducerType producerType = getProducerType(producer);
+        if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
+            request.setTopicName(TOPIC);
+        }
         if (request.getRecords().size() > 1) {
-            return new ResponseEntity<>("too many records in records list, kindly use /kafka/produce/producerOne/bulk for single record push", HttpStatus.PAYLOAD_TOO_LARGE);
+            return new ResponseEntity<>("too many records in records list, kindly use /kafka/produce/{producer}/bulk for single record push", HttpStatus.PAYLOAD_TOO_LARGE);
         }
         return new ResponseEntity<>(customProducerFacade.sendRecord(request.getTopicName(), (K) request.getKey(), (V) request.getRecords().get(0), producerType), HttpStatus.OK);
     }
 
     /**
      * sends single record with processed value
+     *
      * @param request ProducerRequest
      * @return ResponseEntity
      */
     @PostMapping(value = "{producer}/singlep")
     public ResponseEntity sendProcessedRecordToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
+        if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
+            request.setTopicName(TOPIC);
+        }
         if (request.getRecords().size() > 1) {
-            return new ResponseEntity<>("too many records in records list, kindly use /kafka/produce/producerOne/bulk for single record push", HttpStatus.PAYLOAD_TOO_LARGE);
+            return new ResponseEntity<>("too many records in records list, kindly use /kafka/produce/{producer}/bulk for single record push", HttpStatus.PAYLOAD_TOO_LARGE);
         }
         return new ResponseEntity<>(customProducerFacade.sendProcessedRecord(request.getTopicName(), (K) request.getKey(), (V) request.getRecords().get(0), producerType), HttpStatus.OK);
     }
@@ -61,6 +73,9 @@ public class ProducerController<K, V> {
     @PostMapping(value = "{producer}/bulk")
     public List sendRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
+        if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
+            request.setTopicName(TOPIC);
+        }
         return customProducerFacade.sendBulkRecordsUsingProducerRequest(request, producerType);
     }
 
@@ -73,12 +88,15 @@ public class ProducerController<K, V> {
     @PostMapping(value = "{producer}/bulkp")
     public List sendProcessedRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
+        if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
+            request.setTopicName(TOPIC);
+        }
         return customProducerFacade.sendBulkProcessedRecordsUsingProducerRequest(request, producerType);
     }
 
     private ProducerType getProducerType(String producer) {
         for (ProducerType p : ProducerType.values()) {
-            if(p.getProducerName().equals(producer)){
+            if (p.getProducerName().equals(producer)) {
                 return p;
             }
         }
