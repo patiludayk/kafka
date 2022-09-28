@@ -15,23 +15,31 @@ import java.util.Arrays;
 public class StreamServerConfig {
 
     private ScriptUtils scriptUtils;
+    private static boolean isWindows;
 
     @Autowired
-    public StreamServerConfig(ScriptUtils scriptUtils){
+    public StreamServerConfig(ScriptUtils scriptUtils) {
         this.scriptUtils = scriptUtils;
+    }
+
+    static {
+        isWindows = System.getProperty("os.name")
+                .toLowerCase().startsWith("windows");
     }
 
     @Bean
     public void startZookeeperAndKafka() throws IOException {
         log.info("starting zookeeper and kafka.");
-        scriptUtils.runScriptWithCommand(Arrays.asList("sh", "src/main/resources/scripts/kafka-zookeeper-server-start.sh"));
+        if (!isWindows)
+            scriptUtils.runScriptWithCommand(Arrays.asList("sh", "src/main/resources/scripts/kafka-zookeeper-server-start.sh"));
         log.info("zookeeper and kafka started.");
     }
 
     @PreDestroy
     private void shutdown() throws IOException {
         log.info("shutting down stream servers.");
-        scriptUtils.runScriptWithCommand(Arrays.asList("sh", "src/main/resources/scripts/kafka-zookeeper-server-stop.sh"));
+        if (!isWindows)
+            scriptUtils.runScriptWithCommand(Arrays.asList("sh", "src/main/resources/scripts/kafka-zookeeper-server-stop.sh"));
         log.info("stream servers down.");
     }
 
