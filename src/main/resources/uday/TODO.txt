@@ -1,10 +1,17 @@
-1. add CustomProducerImpl for each producer by implementing CustomKafkaProducer >> done 6.2, 6.3
-2. add custom producer, kafkatemplate for custom object - ProducerFactory<String, UserDefinedObject> -> KafkaTemplate<String, UserDefinedObject>
-3. above step will complete adding 2 type of serializer example String and Json.
-4. Add 1 more with different type of serialization and deserialization preferably something different!
-5. make all producers generic >> done 7.
+#Producer:
+>> Add 1 more with different type of serialization and deserialization preferably something different!
+>>
 
-#start consumer side - too many possible scenario to cover, start asap!!!
+#Consumer:
+>> consumer using KafkaConsumer raw  - done
+>> using @KafkaListner
+    >> for default or <String, String> type
+    >> for custom type <String, User> type >> consuming custom message
+>> from default topic
+>> from single topic
+>> from multiple topic
+>> from specific partition consumer
+>> message filter using KafkaListner
+>> 2 consumer of same topic to share load
 
-
-# add swagger ui
+>>> Multi-Method Listeners (https://www.baeldung.com/spring-kafka#multi-method-listeners)

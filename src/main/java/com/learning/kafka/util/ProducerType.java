@@ -4,7 +4,7 @@ public enum ProducerType {
     BROKER1_PRODUCER_DEFAULT("default", "broker1-string-string--default-producer"),
     BROKER2_PRODUCER_1("producer2", "broker2-string-string-producer-1"),
     BROKER1_PRODUCER_2("producer1", "broker1-string-string-producer-2"),
-    BROKER1_PRODUCER_3("producer3", "broker1-string-User-producer-3");
+    BROKER1_PRODUCER_USER("userProducer", "broker1-string-User-producer-3");
 
     private String producerName;
     private String producerDescription;

@@ -164,6 +164,30 @@ Do check last line of this page.
       }
     ]
 
+#### 5. Custom object as value 
+```
+  curl -X 'POST' \
+  'http://localhost:8080/kafka/produce/userProducer/single' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "topicName": "string",
+  "key": "user1",
+  "records": [
+  {"id":1,"first_name":"Stevie","last_name":"Niesegen","email":"sniesegen0@lycos.com","gender":"Male","ip_address":"52.196.184.218","list":["Facebook", "Instagram", "Tweeter"]}
+  ]
+  }'
+```
+#### Response
+    {
+      "partition": 0,
+      "offset": 0,
+      "msg": "msg delivered.",
+      "error": null
+    }
+
+```*** explore other api's via api-doc-ui.html```
+
 ### Consumer API
 
 #### 1. Request - default consumer gets records from initial offset, provide topic name as path variable or else records will be consumed from default topic from application.properties file - TOPIC_NAME=topic-name
