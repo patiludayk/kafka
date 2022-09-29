@@ -1,6 +1,7 @@
 package com.learning.kafka.controller;
 
 import com.learning.kafka.dto.ProducerRequest;
+import com.learning.kafka.dto.ProducerResponse;
 import com.learning.kafka.facade.CustomProducerFacade;
 import com.learning.kafka.util.ProducerType;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -71,10 +73,13 @@ public class ProducerController<K, V> {
      * @return List<ProducerResponse>
      */
     @PostMapping(value = "{producer}/bulk")
-    public List sendRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
+    public List<ProducerResponse> sendRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
         if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
             request.setTopicName(TOPIC);
+        }
+        if (request.getRecords().size() <= 1) {
+            return Arrays.asList(ProducerResponse.builder().error(new RuntimeException("too short request please try /{producerType}/single")).build());
         }
         return customProducerFacade.sendBulkRecordsUsingProducerRequest(request, producerType);
     }
@@ -86,10 +91,13 @@ public class ProducerController<K, V> {
      * @return List<ProducerResponse>
      */
     @PostMapping(value = "{producer}/bulkp")
-    public List sendProcessedRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
+    public List<ProducerResponse> sendProcessedRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
         if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
             request.setTopicName(TOPIC);
+        }
+        if (request.getRecords().size() <= 1) {
+            return Arrays.asList(ProducerResponse.builder().error(new RuntimeException("too short request please try /{producerType}/singlep")).build());
         }
         return customProducerFacade.sendBulkProcessedRecordsUsingProducerRequest(request, producerType);
     }

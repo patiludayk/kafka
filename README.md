@@ -16,7 +16,7 @@ Do check last line of this page.
   * maven - 3.8.1
 * [Learn Kafka](https://bitbucket.org/patiludayk/kafka-basics/)
 
-##How do I get set up? ###
+## How do I get set up? ###
 
 * Prerequisite 
   * [Java](https://www.oracle.com/uk/java/technologies/javase/javase8-archive-downloads.html)
@@ -56,8 +56,12 @@ Do check last line of this page.
   * once received 200 successful response, connect kafka broker using Offset Explore to check your event at Kafka against topic name you provided.
 
 ## REST API
-The REST API to the example app is described below.
- * {producer} - possible values --> "default", "producer1", "producer2". You can create your own producer using ProducerFactory.
+```
+** All API documentation available at - /api-docs **
+** All API document UI available at - /api-docs-ui.html **
+```
+* However some examples are given below:
+* {producer} - possible values --> "default", "producer1", "producer2". You can create your own producer using ProducerFactory.
 
 ### Producer API
 #### 1. single record produce - send single record using {producer} producer. provide topic name in requestbody or else records will be pushed to default topic from application.properties file - TOPIC_NAME=topic-name 
@@ -159,6 +163,30 @@ The REST API to the example app is described below.
           "error": null
       }
     ]
+
+#### 5. Custom object as value 
+```
+  curl -X 'POST' \
+  'http://localhost:8080/kafka/produce/userProducer/single' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "topicName": "string",
+  "key": "user1",
+  "records": [
+  {"id":1,"first_name":"Stevie","last_name":"Niesegen","email":"sniesegen0@lycos.com","gender":"Male","ip_address":"52.196.184.218","list":["Facebook", "Instagram", "Tweeter"]}
+  ]
+  }'
+```
+#### Response
+    {
+      "partition": 0,
+      "offset": 0,
+      "msg": "msg delivered.",
+      "error": null
+    }
+
+```*** explore other api's via api-doc-ui.html```
 
 ### Consumer API
 

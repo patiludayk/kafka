@@ -103,15 +103,13 @@ public class CustomProducerFacade<K, V> {
             case BROKER2_PRODUCER_1:
                 kafkaTemplate = (KafkaTemplate<K, V>) applicationContext.getBean("producerTwo");
                 break;
+            case BROKER1_PRODUCER_USER:
+                kafkaTemplate = (KafkaTemplate<K, V>) applicationContext.getBean("stringUserProducer");
+                break;
             case BROKER1_PRODUCER_2:
-                kafkaTemplate = (KafkaTemplate<K, V>) applicationContext.getBean("producerOne");
-                break;
-            case BROKER1_PRODUCER_3:
-                kafkaTemplate = (KafkaTemplate<K, V>) applicationContext.getBean("producerThree");
-                break;
             default:
                 //this is BROKER1_PRODUCER_DEFAULT >> producer
-                kafkaTemplate = (KafkaTemplate<K, V>) applicationContext.getBean("kafkaTemplate");
+                kafkaTemplate = (KafkaTemplate<K, V>) applicationContext.getBean("producerOne");
         }
         return kafkaTemplate;
     }
