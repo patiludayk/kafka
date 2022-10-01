@@ -13,12 +13,30 @@ public class LocalTest {
     private static String kafkaBinDirectory = "/Users/udaypatil/kafka_2.13-3.2.1/bin/";
     private static String kafkaConfigDirectory = "/Users/udaypatil/kafka_2.13-3.2.1/config/";
 
+    static int c = 1;
+
+    public LocalTest(){
+        log.info("in constructor");
+        c = 2;
+    }
+
+    {
+        log.info("in block");
+        c = 3;
+    }
+
+    static {
+        log.info("in static block");
+        c = 4;
+    }
+
     public static void main(String[] args) {
         LocalTest localTest = new LocalTest();
+        log.info("c: {}", localTest.c);
 
         //localTest.executeShellCommand("/Users/udaypatil/test", "sh", "test.sh");
 
-        localTest.getMeProducerType("producer30");
+        //localTest.getMeProducerType("producer30");
 
         log.info("done.");
     }

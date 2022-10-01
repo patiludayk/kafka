@@ -7,10 +7,10 @@ import java.util.List;
 
 @Builder
 @Getter
-public class ConsumerResponse {
+public class ConsumerResponse<T> {
     private int partition;
     private long offset;
     private String key;
-    private String value;
+    private List<T> value;
     private String exception;
 }

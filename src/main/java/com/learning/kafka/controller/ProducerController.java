@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class ProducerController<K, V> {
      * @param request ProducerRequest
      * @return ResponseEntity
      */
-    @PostMapping(value = "{producer}/single")
+    @PostMapping(value = "{producer}/single", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity sendRecordToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
 
         ProducerType producerType = getProducerType(producer);
@@ -54,7 +55,7 @@ public class ProducerController<K, V> {
      * @param request ProducerRequest
      * @return ResponseEntity
      */
-    @PostMapping(value = "{producer}/singlep")
+    @PostMapping(value = "{producer}/singlep", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity sendProcessedRecordToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
         if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
@@ -72,7 +73,7 @@ public class ProducerController<K, V> {
      * @param request ProducerRequest
      * @return List<ProducerResponse>
      */
-    @PostMapping(value = "{producer}/bulk")
+    @PostMapping(value = "{producer}/bulk", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ProducerResponse> sendRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
         if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
@@ -90,7 +91,7 @@ public class ProducerController<K, V> {
      * @param request ProducerRequest
      * @return List<ProducerResponse>
      */
-    @PostMapping(value = "{producer}/bulkp")
+    @PostMapping(value = "{producer}/bulkp", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ProducerResponse> sendProcessedRecordsToKafkaViaProducerTwo(@PathVariable String producer, @RequestBody ProducerRequest request) {
         ProducerType producerType = getProducerType(producer);
         if (request.getTopicName() == null || request.getTopicName().isEmpty()) {
