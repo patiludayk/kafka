@@ -1,10 +1,23 @@
 package com.learning.kafka.service;
 
-import org.springframework.stereotype.Service;
+import com.learning.kafka.dto.ConsumerRequest;
 
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
-@Service
 public interface CustomKafkaConsumer<T> {
-    void consumeRecords(String topicName, List<T> messages);
+
+    /**
+     * This returns the consumer name.
+     *
+     * @return String consumer name
+     */
+    String consumerName();
+
+    /**
+     * Consumes records from kafka topic in the messages.
+     *
+     * @param consumerRequest ConsumerRequest
+     * @param messages        BlockingQueue
+     */
+    void consumeRecords(ConsumerRequest consumerRequest, BlockingQueue<T> messages);
 }
